@@ -4,7 +4,7 @@ import "dotenv/config";
 
 const llm = new ChatGoogle({
   apiKey: process.env.GOOGLE_API_KEY,
-  model: "gemini-3-flash-preview",
+  model: "gemma-4-31b-it",
 });
 
 const SystemMessageText = `You are an investigative tech and current affairs journalist. Your goal is to provide a 'Deep Dive' summary of a trending topic in under 240 characters.
