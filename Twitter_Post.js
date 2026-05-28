@@ -18,6 +18,8 @@ async function getContent() {
     );
 
     const postContent = await fetchContent(trendItem);
+
+    console.log(postContent);
     return postContent;
   } catch (e) {
     console.error(e);
