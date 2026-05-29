@@ -2,7 +2,6 @@ import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import "dotenv/config";
 
-// Initialize the model with the native Google GenAI package and your retry logic
 const llm = new ChatGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_API_KEY,
   model: "gemini-3.1-flash-lite",
