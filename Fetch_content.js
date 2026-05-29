@@ -4,8 +4,7 @@ import "dotenv/config";
 
 const llm = new ChatGoogle({
   apiKey: process.env.GOOGLE_API_KEY,
-  model: "gemini-3-flash-preview",
-  maxRetries: 2,
+  model: "gemini-3.1-flash-lite",
 });
 
 const SystemMessageText = `You are a top-tier, objective Global News Anchor. Your goal is to provide a 'Deep Dive' summary of the provided trending topic under 240 characters.
@@ -29,5 +28,6 @@ export default async function fetchContent(content) {
     new HumanMessage("contents:", content),
   ]);
 
+  console.log(response.text);
   return response.text;
 }
