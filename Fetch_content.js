@@ -23,23 +23,12 @@ RESEARCH & STYLE PROTOCOL:
 - Format: A crisp 1-2 sentence news lead, followed by a brief sentence explaining the implication or current status. Avoid AI jargon (e.g., 'delve', 'testament').`;
 
 export default async function fetchContent(content) {
-  console.log("Database payload received:", content);
+  console.log(content);
 
-  // Clean the payload into a structured string before sending to prevent object serialization bugs
-  const formattedUserContent = `
-HEADLINE/TITLE: ${content.title || ""}
-SUMMARY/CONTEXT: ${content.description || content.content || ""}
-`;
-
-  // FIX: Pass the combined string payload as a single argument into the HumanMessage constructor
   const response = await llm.invoke([
     new SystemMessage(SystemMessageText),
-    new HumanMessage(formattedUserContent),
+    new HumanMessage(content),
   ]);
 
-  // LangChain Chat models return the text in the .content property
-  const tweetText = response.content.trim().replace(/"/g, "");
-
-  console.log("Generated Tweet:", tweetText);
-  return tweetText;
+  return response.text;
 }
