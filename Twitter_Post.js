@@ -1,31 +1,7 @@
 import "dotenv/config";
-import { MongoClient } from "mongodb";
-import { Client, OAuth1 } from "@xdevplatform/xdk";
-import fetchContent from "./Fetch_content.js";
 import { TwitterApi } from "twitter-api-v2";
-
-const mongoClient = new MongoClient(process.env.MONGO_URI);
-
-async function getContent() {
-  try {
-    await mongoClient.connect();
-    const db = mongoClient.db("twitter_bot");
-    const trends = db.collection("trends");
-
-    const trendItem = await trends.findOneAndDelete(
-      {},
-      { sort: { createdAt: -1 } },
-    );
-
-    const postContent = await fetchContent(trendItem);
-
-    console.log(postContent);
-    return postContent;
-  } catch (e) {
-    console.error(e);
-    return error;
-  }
-}
+import GetContent from "./GetContent.js";
+import { stat } from "fs";
 
 const client = new TwitterApi({
   appKey: process.env.X_API_KEY,
@@ -37,14 +13,26 @@ const client = new TwitterApi({
 
 export default async function Twitter_Post() {
   try {
-    const postText = await getContent();
-
+    const { text, status } = await GetContent();
     const rwClient = client.readWrite;
 
-    const response = await rwClient.v2.tweet(postText);
+    let mediaId
+
+    if (status === 0) {
+      mediaId = await rwClient.v1.uploadMedia('./image.png');
+      console.log("Image uploaded...");
+    }
+
+    const postingObject = { text: text };
+
+    if (status == 0) postingObject.media = { media_ids: [mediaId] };
+
+    const response = await rwClient.v2.tweet(postingObject);
+
+    console.log("Successfully posted to X:", response.data);
     return 0;
   } catch (e) {
-    console.error(e);
+    console.error("Critical error in Twitter_Post:", e);
     process.exit(1);
   } finally {
     process.exit(0);
