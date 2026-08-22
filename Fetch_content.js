@@ -1,6 +1,6 @@
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-import thoughts from './Generate_Random_Content';
+import thoughts from './Generate_Random_Content.js';
 import "dotenv/config";
 
 const llm = new ChatGoogleGenerativeAI({

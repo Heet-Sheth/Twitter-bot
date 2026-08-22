@@ -1,7 +1,6 @@
 import "dotenv/config";
 import { TwitterApi } from "twitter-api-v2";
 import GetContent from "./GetContent.js";
-import { stat } from "fs";
 
 const client = new TwitterApi({
   appKey: process.env.X_API_KEY,
