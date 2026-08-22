@@ -1,5 +1,6 @@
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+import thoughts from './Generate_Random_Content';
 import "dotenv/config";
 
 const llm = new ChatGoogleGenerativeAI({
@@ -22,33 +23,31 @@ EXACT OUTPUT FORMAT:
 
 export default async function fetchContent(content) {
   if (!content) {
+    const currentThough = thoughts();
     return {
-      tweetTest: "You tell me how did your day went? ❤️",
-      promptTest:
-        "A beautiful, romantic digital painting of two lovers looking out over a glowing sunset cityscape, warm colors",
+      tweetTest: currentThough.text,
+      promptTest: currentThough.prompt,
     };
   }
-
-  console.log(content);
 
   const response = await llm.invoke([
     new SystemMessage(SystemMessageText),
     new HumanMessage(content),
   ]);
 
-  // Fix: Access response.content safely
   const rawText = response.content ? response.content.trim() : "";
 
-  let tweetTest = "You tell me how did your day went? ❤️";
-  let promptTest =
-    "A beautiful, romantic digital painting of two lovers looking out over a glowing sunset cityscape, warm colors";
+  let tweetTest;
+  let promptTest;
 
   if (rawText.includes("***")) {
     const parts = rawText.split("***");
     tweetTest = parts[0].trim().replace(/"/g, "");
     promptTest = parts[1].trim();
   } else {
-    tweetTest = rawText.replace(/"/g, "").substring(0, 235);
+    const currentThough = thoughts();
+    tweetTest = currentThough.text;
+    promptTest = currentThough.prompt;
   }
 
   return { tweetTest, promptTest };

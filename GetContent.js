@@ -2,6 +2,7 @@ import "dotenv/config";
 import { MongoClient } from "mongodb";
 import fetchContent from "./Fetch_content.js";
 import GenerateImage from "./GenerateImage.js";
+import thoughts from "./Generate_Random_Content.js";
 
 const mongoClient = new MongoClient(process.env.MONGO_URI);
 
@@ -31,11 +32,10 @@ async function GetContent() {
   } catch (e) {
     console.error("Error inside GetContent:", e);
     // Safe fallbacks to keep the script from crashing upstream
-    const status = await GenerateImage(
-      "A cozy, romantic couple sharing a warm drink under neon lights, digital art",
-    );
+    const currentThough = thoughts();
+    const status = await GenerateImage(currentThough.prompt);
     return {
-      text: "You tell me how did your day went? ❤️",
+      text: currentThough.text,
       status: status
     };
   } finally {
